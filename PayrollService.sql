@@ -47,3 +47,47 @@ SELECT * FROM employee_payroll;
 |  6 | Sarang        | 6666666.7800000000 | 2020-08-08 |
 +----+---------------+--------------------+------------+
 */
+
+-- read data by employee name
+SELECT salary FROM employee_payroll WHERE employee_name = 'Rupesh';
+/* OUTPUT
++------------------+
+| salary           |
++------------------+
+| 60500.5400000000 |
++------------------+
+*/
+
+-- try to read 'Bill' data
+SELECT salary FROM employee_payroll WHERE employee_name = 'Bill';
+/* OUTPUT
+Empty set (0.00 sec)
+*/
+
+-- insert 'Bill' data to table
+INSERT INTO employee_payroll (employee_name, salary, start_date) 
+VALUES ('Bill', 25786312.25, '2022-01-01');
+
+SELECT salary FROM employee_payroll WHERE employee_name = 'Bill';
+/* OUTPUT
++---------------------+
+| salary              |
++---------------------+
+| 25786312.2500000000 |
++---------------------+
+*/
+
+-- read data by start date in between date 2018-05-16 and todays date
+SELECT * FROM employee_payroll WHERE start_date BETWEEN DATE('2018-05-16') AND DATE(NOW());
+/* OUTPUT
++----+---------------+---------------------+------------+
+| id | employee_name | salary              | start_date |
++----+---------------+---------------------+------------+
+|  2 | Jayesh        |    50000.5400000000 | 2019-02-19 |
+|  3 | Rupesh        |    60500.5400000000 | 2019-05-19 |
+|  4 | Ram           |   999999.9990000000 | 2020-06-25 |
+|  5 | Narang        |   555555.5600000000 | 2021-10-21 |
+|  6 | Sarang        |  6666666.7800000000 | 2020-08-08 |
+|  7 | Bill          | 25786312.2500000000 | 2022-01-01 |
++----+---------------+---------------------+------------+
+*/
