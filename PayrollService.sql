@@ -150,3 +150,103 @@ SELECT * FROM employee_payroll;
 |  9 | Gita          | F      |   482514.2100000000 | 2021-01-05 |
 +----+---------------+--------+---------------------+------------+
 */
+
+-- check sum of all male employees salary
+SELECT SUM(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
+/* OUTPUT
++---------------------+
+| SUM(salary)         |
++---------------------+
+| 34139035.6690000000 |
++---------------------+
+*/
+
+-- check sum of all female employees salary
+SELECT SUM(salary) FROM employee_payroll WHERE gender = 'F' GROUP BY gender;
+/* OUTPUT
++--------------------+
+| SUM(salary)        |
++--------------------+
+| 6349767.3300000000 |
++--------------------+
+*/
+
+-- check average of all male employees salary
+SELECT AVG(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
+/* OUTPUT
++------------------------+
+| AVG(salary)            |
++------------------------+
+| 4877005.09557142857143 |
++------------------------+
+*/
+
+-- check average of all female employees salary
+SELECT AVG(salary) FROM employee_payroll WHERE gender = 'F' GROUP BY gender;
+/* OUTPUT
++------------------------+
+| AVG(salary)            |
++------------------------+
+| 3174883.66500000000000 |
++------------------------+
+*/
+
+-- check minimum salary in male employees salary
+SELECT MIN(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
+/* OUTPUT
++------------------+
+| MIN(salary)      |
++------------------+
+| 20000.0000000000 |
++------------------+
+*/
+
+-- check minimum salary in female employees salary
+SELECT MIN(salary) FROM employee_payroll WHERE gender = 'F' GROUP BY gender;
+/* OUTPUT
++-------------------+
+| MIN(salary)       |
++-------------------+
+| 482514.2100000000 |
++-------------------+
+*/
+
+-- check maximum salary in male employees salary
+SELECT MAX(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
+/* OUTPUT
++---------------------+
+| MAX(salary)         |
++---------------------+
+| 25786312.2500000000 |
++---------------------+
+*/
+
+-- check maximum salary in female employees salary
+SELECT MAX(salary) FROM employee_payroll WHERE gender = 'F' GROUP BY gender;
+/* OUTPUT
++--------------------+
+| MAX(salary)        |
++--------------------+
+| 5867253.1200000000 |
++--------------------+
+*/
+
+-- check count of male employees who are getting salary
+SELECT COUNT(salary) FROM employee_payroll WHERE gender = 'M' GROUP BY gender;
+/* OUTPUT
++---------------+
+| COUNT(salary) |
++---------------+
+|             7 |
++---------------+
+*/
+
+-- check count of female employees who are getting salary
+SELECT COUNT(salary) FROM employee_payroll WHERE gender = 'F' GROUP BY gender;
+/* OUTPUT
++---------------+
+| COUNT(salary) |
++---------------+
+|             2 |
++---------------+
+*/
