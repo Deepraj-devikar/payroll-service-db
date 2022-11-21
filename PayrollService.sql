@@ -32,3 +32,6 @@ VALUES (3, 'Rupesh', 60500.54, '2019-05-19'),
 INSERT INTO employee_payroll (employee_name, salary, start_date) 
 VALUES ('Narang', 555555.56, '2021-10-21'), 
 ('Sarang', 6666666.78, '2020-08-08');
+
+-- read data from employee payroll table
+SELECT * FROM employee_payroll;
