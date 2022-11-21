@@ -91,3 +91,62 @@ SELECT * FROM employee_payroll WHERE start_date BETWEEN DATE('2018-05-16') AND D
 |  7 | Bill          | 25786312.2500000000 | 2022-01-01 |
 +----+---------------+---------------------+------------+
 */
+
+-- iserting sita and gita data to employee payroll table
+INSERT INTO employee_payroll (employee_name, salary, start_date) 
+VALUES ('Sita', 5867253.12, '2020-04-15'), 
+('Gita', 482514.21, '2021-01-05');
+
+-- add column gender after column employee name
+ALTER TABLE employee_payroll ADD gender CHAR(1) AFTER employee_name;
+
+-- read current data from employee payroll table
+SELECT * FROM employee_payroll;
+/* OUTPUT
++----+---------------+--------+---------------------+------------+
+| id | employee_name | gender | salary              | start_date |
++----+---------------+--------+---------------------+------------+
+|  1 | Pushpak       | NULL   |    20000.0000000000 | 2018-02-19 |
+|  2 | Jayesh        | NULL   |    50000.5400000000 | 2019-02-19 |
+|  3 | Rupesh        | NULL   |    60500.5400000000 | 2019-05-19 |
+|  4 | Ram           | NULL   |   999999.9990000000 | 2020-06-25 |
+|  5 | Narang        | NULL   |   555555.5600000000 | 2021-10-21 |
+|  6 | Sarang        | NULL   |  6666666.7800000000 | 2020-08-08 |
+|  7 | Bill          | NULL   | 25786312.2500000000 | 2022-01-01 |
+|  8 | Sita          | NULL   |  5867253.1200000000 | 2020-04-15 |
+|  9 | Gita          | NULL   |   482514.2100000000 | 2021-01-05 |
++----+---------------+--------+---------------------+------------+
+*/
+
+-- gender column has NULL value in every rows
+-- have to update gender values
+UPDATE employee_payroll SET gender = 'M' 
+WHERE employee_name = 'Pushpak' 
+OR employee_name = 'Jayesh' 
+OR employee_name = 'Rupesh' 
+OR employee_name = 'Ram' 
+OR employee_name = 'Narang' 
+OR employee_name = 'Sarang' 
+OR employee_name = 'Bill';
+
+UPDATE employee_payroll SET gender = 'F' 
+WHERE employee_name = 'Sita' 
+OR employee_name = 'Gita';
+
+-- read current data from employee payroll table
+SELECT * FROM employee_payroll;
+/* OUTPUT
++----+---------------+--------+---------------------+------------+
+| id | employee_name | gender | salary              | start_date |
++----+---------------+--------+---------------------+------------+
+|  1 | Pushpak       | M      |    20000.0000000000 | 2018-02-19 |
+|  2 | Jayesh        | M      |    50000.5400000000 | 2019-02-19 |
+|  3 | Rupesh        | M      |    60500.5400000000 | 2019-05-19 |
+|  4 | Ram           | M      |   999999.9990000000 | 2020-06-25 |
+|  5 | Narang        | M      |   555555.5600000000 | 2021-10-21 |
+|  6 | Sarang        | M      |  6666666.7800000000 | 2020-08-08 |
+|  7 | Bill          | M      | 25786312.2500000000 | 2022-01-01 |
+|  8 | Sita          | F      |  5867253.1200000000 | 2020-04-15 |
+|  9 | Gita          | F      |   482514.2100000000 | 2021-01-05 |
++----+---------------+--------+---------------------+------------+
+*/
