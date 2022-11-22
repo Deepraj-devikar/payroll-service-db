@@ -250,3 +250,61 @@ SELECT COUNT(salary) FROM employee_payroll WHERE gender = 'F' GROUP BY gender;
 |             2 |
 +---------------+
 */
+
+-----------------AFTER CREATION OF EMPLOYEE TABLE----------------------------
+-- have to store employee information insted employee name only
+-- add employee id
+ALTER TABLE employee_payroll 
+ADD employee_id INT, 
+ADD FOREIGN KEY (employee_id) REFERENCES employee(id);
+
+-- update employee id in employee payroll accordin to employee name
+UPDATE employee_payroll
+INNER JOIN employee ON employee_payroll.employee_name = employee.employee_name
+SET employee_payroll.employee_id = employee.id;
+
+-- move employee id column next to employee name column
+ALTER TABLE employee_payroll
+MODIFY employee_id INT AFTER employee_name;
+
+-- drop employee name column
+ALTER TABLE employee_payroll DROP employee_name;
+
+SELECT * FROM employee_payroll;
+/* OUTPUT
++----+-------------+--------+---------------------+------------+
+| id | employee_id | gender | salary              | start_date |
++----+-------------+--------+---------------------+------------+
+|  1 |           1 | M      |    20000.0000000000 | 2018-02-19 |
+|  2 |           2 | M      |    50000.5400000000 | 2019-02-19 |
+|  3 |           4 | M      |    60500.5400000000 | 2019-05-19 |
+|  4 |           3 | M      |   999999.9990000000 | 2020-06-25 |
+|  5 |           5 | M      |   555555.5600000000 | 2021-10-21 |
+|  6 |           6 | M      |  6666666.7800000000 | 2020-08-08 |
+|  7 |           7 | M      | 25786312.2500000000 | 2022-01-01 |
+|  8 |           8 | F      |  5867253.1200000000 | 2020-04-15 |
+|  9 |           9 | F      |   482514.2100000000 | 2021-01-05 |
++----+-------------+--------+---------------------+------------+
+*/
+
+-----------------------------------AFTER ADDING EMPLOYEE GENDER AND START DATE TO EMPLOYEE TABLE-----------------------
+ALTER TABLE employee_payroll DROP gender, DROP start_date;
+
+-- retrive employee payroll data
+SELECT e_p.id AS employee_payroll_id, e.employee_name, e.gender, e_p.salary, e.start_date
+FROM employee_payroll AS e_p LEFT JOIN employee AS e ON e_p.employee_id = e.id;
+/* OUTPUT
++---------------------+---------------+--------+---------------------+------------+
+| employee_payroll_id | employee_name | gender | salary              | start_date |
++---------------------+---------------+--------+---------------------+------------+
+|                   1 | Pushpak       | M      |    20000.0000000000 | 2018-02-19 |
+|                   2 | Jayesh        | M      |    50000.5400000000 | 2019-02-19 |
+|                   3 | Rupesh        | M      |    60500.5400000000 | 2019-05-19 |
+|                   4 | Ram           | M      |   999999.9990000000 | 2020-06-25 |
+|                   5 | Narang        | M      |   555555.5600000000 | 2021-10-21 |
+|                   6 | Sarang        | M      |  6666666.7800000000 | 2020-08-08 |
+|                   7 | Bill          | M      | 25786312.2500000000 | 2022-01-01 |
+|                   8 | Sita          | F      |  5867253.1200000000 | 2020-04-15 |
+|                   9 | Gita          | F      |   482514.2100000000 | 2021-01-05 |
++---------------------+---------------+--------+---------------------+------------+
+*/

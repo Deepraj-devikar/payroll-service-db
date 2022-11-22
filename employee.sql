@@ -188,3 +188,41 @@ LEFT JOIN  department AS d ON d.id = e.department_id;
 |           9 | Gita          | 8965748741   | line 1         | line 2         | city | state      | country | 000000 | computer science |
 +-------------+---------------+--------------+----------------+----------------+------+------------+---------+--------+------------------+
 */
+
+--------------------------AFTER ADDING EMPLOYEE_ID COLUMN TO EMPLOYEE PAYROLL TABLE------------------------
+-- move employee gender and start date column to employee table from employee payroll table
+ALTER TABLE employee
+ADD gender CHAR(1) AFTER employee_name,
+ADD start_date DATE AFTER department_id;
+
+-- set employee gender and start date values
+UPDATE employee
+INNER JOIN employee_payroll ON employee_payroll.employee_id = employee.id
+SET employee.gender = employee_payroll.gender, 
+employee.start_date = employee_payroll.start_date;
+
+-- retrive employee all information
+SELECT e.id As employee_id, e.employee_name, e.gender, p.phone_number, 
+e_a.line_1 AS address_line_1, e_a.line_2 AS address_line_2, 
+e_a.city, e_a.state_name, e_a.country, e_a.zip, d.department_name, e.start_date
+FROM employee AS e 
+LEFT JOIN phone AS p ON e.id = p.employee_id
+LEFT JOIN employee_address AS e_a ON e.id = e_a.employee_id
+LEFT JOIN  department AS d ON d.id = e.department_id;
+/* OUTPUT
++-------------+---------------+--------+--------------+----------------+----------------+------+------------+---------+--------+------------------+------------+
+| employee_id | employee_name | gender | phone_number | address_line_1 | address_line_2 | city | state_name | country | zip    | department_name  | start_date |
++-------------+---------------+--------+--------------+----------------+----------------+------+------------+---------+--------+------------------+------------+
+|           1 | Pushpak       | M      | 9852541256   | godibar sq     | shop name      | NGP  | MH         | IND     | 440015 | computer science | 2018-02-19 |
+|           1 | Pushpak       | M      | 7861542354   | godibar sq     | shop name      | NGP  | MH         | IND     | 440015 | computer science | 2018-02-19 |
+|           2 | Jayesh        | M      | 4782561472   | maskasath      | near mandir    | NGP  | MH         | IND     | 441125 | electrical       | 2019-02-19 |
+|           2 | Jayesh        | M      | 789254175    | maskasath      | near mandir    | NGP  | MH         | IND     | 441125 | electrical       | 2019-02-19 |
+|           3 | Ram           | M      | 7854123568   | agresan sq     | garage name    | NGP  | MH         | IND     | 442571 | electrical       | 2020-06-25 |
+|           4 | Rupesh        | M      | 781475473214 | jhasi rani sq  | complex number | NGP  | MH         | IND     | 445782 | computer science | 2019-05-19 |
+|           5 | Narang        | M      | 8752689874   | line 1         | line 2         | city | state      | country | 000000 | electrical       | 2021-10-21 |
+|           6 | Sarang        | M      | 785786589    | line 1         | line 2         | city | state      | country | 000000 | computer science | 2020-08-08 |
+|           7 | Bill          | M      | 4785682541   | line 1         | line 2         | city | state      | country | 000000 | computer science | 2022-01-01 |
+|           8 | Sita          | F      | 875471243    | mahal          | shop name      | NGP  | MH         | IND     | 445471 | electrical       | 2020-04-15 |
+|           9 | Gita          | F      | 8965748741   | line 1         | line 2         | city | state      | country | 000000 | computer science | 2021-01-05 |
++-------------+---------------+--------+--------------+----------------+----------------+------+------------+---------+--------+------------------+------------+
+*/
