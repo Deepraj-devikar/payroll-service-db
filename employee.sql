@@ -226,3 +226,29 @@ LEFT JOIN  department AS d ON d.id = e.department_id;
 |           9 | Gita          | F      | 8965748741   | line 1         | line 2         | city | state      | country | 000000 | computer science | 2021-01-05 |
 +-------------+---------------+--------+--------------+----------------+----------------+------+------------+---------+--------+------------------+------------+
 */
+
+-- inserting one more department (sales and marketing)
+INSERT INTO department (department_name) VALUES ('Sales And Marketing');
+
+SELECT * FROM department;
+/* OUTPUT
++----+---------------------+
+| id | department_name     |
++----+---------------------+
+|  1 | computer science    |
+|  2 | electrical          |
+|  3 | Sales And Marketing |
++----+---------------------+
+*/
+
+-- inserting employee Terissa to Sales and Marketing department
+INSERT INTO employee (employee_name, gender, start_date, department_id) 
+VALUES ('Terissa', 'F', '2022-11-22', 3);
+
+INSERT INTO employee_address (line_1, line_2, city, state_name, country, zip, employee_id)
+VALUES ('sector 4', '', 'New York', '', 'USA', '021453', 10);
+
+UPDATE employee SET address_id = 10 WHERE id = 10;
+
+INSERT INTO phone (phone_number, employee_id)
+VALUES ('8757456823', 10), ('5873642356', 10);

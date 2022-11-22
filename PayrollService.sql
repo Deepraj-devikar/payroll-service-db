@@ -370,3 +370,30 @@ VALUES ('life insuarance premium', 1000, 2),
 ('home loan', 15000, 3), 
 ('sukanya samridhi account', 200000, 4), 
 ('tution fee for children', 50000, 4);
+
+INSERT INTO employee_payroll (employee_id, salary, basic_pay, taxable_pay, income_tax, net_pay)
+VALUES (10, 100000, 120000, 1000, 2000, 95000);
+
+INSERT INTO deduction (deduction_name, deduction_amount, employee_payroll_id)
+VALUES ('Accommodation', 1000, 10), 
+('Air Ticket', 2500, 10), 
+('Sukanya Samridhhi Account', 2500, 10);
+
+-- retrive employee payroll information of Terissa
+SELECT e.id AS employee_id,  e.employee_name, e.gender, d.department_name, 
+e_p.salary, e_p.basic_pay, e_p.taxable_pay, e_p.income_tax, e_p.net_pay, 
+dc.deduction_name, dc.deduction_amount, e.start_date
+FROM employee_payroll AS e_p 
+LEFT JOIN employee AS e ON e_p.employee_id = e.id
+LEFT JOIN department AS d ON e.department_id = d.id
+LEFT JOIN deduction AS dc ON e_p.id = dc.employee_payroll_id
+WHERE e.id = 10;
+/* OUTPUT
++-------------+---------------+--------+---------------------+-------------------+-------------------+-----------------+-----------------+------------------+---------------------------+------------------+------------+
+| employee_id | employee_name | gender | department_name     | salary            | basic_pay         | taxable_pay     | income_tax      | net_pay          | deduction_name            | deduction_amount | start_date |
++-------------+---------------+--------+---------------------+-------------------+-------------------+-----------------+-----------------+------------------+---------------------------+------------------+------------+
+|          10 | Terissa       | F      | Sales And Marketing | 100000.0000000000 | 120000.0000000000 | 1000.0000000000 | 2000.0000000000 | 95000.0000000000 | Accommodation             |  1000.0000000000 | 2022-11-22 |
+|          10 | Terissa       | F      | Sales And Marketing | 100000.0000000000 | 120000.0000000000 | 1000.0000000000 | 2000.0000000000 | 95000.0000000000 | Air Ticket                |  2500.0000000000 | 2022-11-22 |
+|          10 | Terissa       | F      | Sales And Marketing | 100000.0000000000 | 120000.0000000000 | 1000.0000000000 | 2000.0000000000 | 95000.0000000000 | Sukanya Samridhhi Account |  2500.0000000000 | 2022-11-22 |
++-------------+---------------+--------+---------------------+-------------------+-------------------+-----------------+-----------------+------------------+---------------------------+------------------+------------+
+*/
