@@ -565,3 +565,24 @@ WHERE employee.employee_name = 'Bill';
 | 25786312.2500000000 |
 +---------------------+
 */
+
+-- retrive salary according to start date
+SELECT salary FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.start_date BETWEEN CAST('2018-01-01' AS DATE) AND DATE(NOW());
+/* OUTPUT
++---------------------+
+| salary              |
++---------------------+
+|    20000.0000000000 |
+|    50000.5400000000 |
+|   999999.9990000000 |
+|    60500.5400000000 |
+|   555555.5600000000 |
+|  6666666.7800000000 |
+| 25786312.2500000000 |
+|  5867253.1200000000 |
+|   482514.2100000000 |
+|   100000.0000000000 |
++---------------------+
+*/
