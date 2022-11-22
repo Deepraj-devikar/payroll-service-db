@@ -308,3 +308,65 @@ FROM employee_payroll AS e_p LEFT JOIN employee AS e ON e_p.employee_id = e.id;
 |                   9 | Gita          | F      |   482514.2100000000 | 2021-01-05 |
 +---------------------+---------------+--------+---------------------+------------+
 */
+
+-- create duduction table
+CREATE TABLE deduction (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    deduction_name VARCHAR(25) NOT NULL,
+    deduction_amount DECIMAL(20, 10) NOT NULL,
+    employee_payroll_id INT NOT NULL,
+    FOREIGN KEY (employee_payroll_id) REFERENCES employee_payroll(id)
+);
+
+-- add columns basic pay, taxable pay, income tax, net pay to employee payroll table
+ALTER TABLE employee_payroll
+ADD basic_pay DECIMAL(20, 10),
+ADD taxable_pay DECIMAL(20, 10),
+ADD income_tax DECIMAL(20, 10),
+ADD net_pay DECIMAL(20, 10),
+MODIFY employee_id INT NOT NULL;
+
+-- set values for employee payroll
+UPDATE employee_payroll
+SET basic_pay = 25000, taxable_pay = 2000, income_tax = 4000, net_pay = 23000
+WHERE id = 1;
+
+UPDATE employee_payroll
+SET basic_pay = 60000, taxable_pay = 1000, income_tax = 2000, net_pay = 55000
+WHERE id = 2;
+
+UPDATE employee_payroll
+SET basic_pay = 70000, taxable_pay = 2500, income_tax = 5000, net_pay = 54000
+WHERE id = 3;
+
+UPDATE employee_payroll
+SET basic_pay = 1000000, taxable_pay = 15000, income_tax = 30000, net_pay = 900000
+WHERE id = 4;
+
+UPDATE employee_payroll
+SET basic_pay = 600000, taxable_pay = 2000, income_tax = 5000, net_pay = 500000
+WHERE id = 5;
+
+UPDATE employee_payroll
+SET basic_pay = 7000000, taxable_pay = 200000, income_tax = 500000, net_pay = 6500000
+WHERE id = 6;
+
+UPDATE employee_payroll
+SET basic_pay = 7000000, taxable_pay = 200000, income_tax = 500000, net_pay = 6500000
+WHERE id = 7;
+
+UPDATE employee_payroll
+SET basic_pay = 60000, taxable_pay = 1000, income_tax = 2000, net_pay = 55000
+WHERE id = 8;
+
+UPDATE employee_payroll
+SET basic_pay = 60000, taxable_pay = 1000, income_tax = 2000, net_pay = 55000
+WHERE id = 9;
+
+INSERT INTO deduction (deduction_name, deduction_amount, employee_payroll_id)
+VALUES ('life insuarance premium', 1000, 2), 
+('tution fee for children', 2500, 2), 
+('EPF', 2500, 3), 
+('home loan', 15000, 3), 
+('sukanya samridhi account', 200000, 4), 
+('tution fee for children', 50000, 4);
