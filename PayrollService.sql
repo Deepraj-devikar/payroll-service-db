@@ -554,3 +554,14 @@ LEFT JOIN deduction AS dc ON e_p.id = dc.employee_payroll_id;
 +-------------+---------------+--------+---------------------+---------------------+--------------------+-------------------+-------------------+--------------------+---------------------------+-------------------+------------+
 */
 
+-- retrive salary of Bill
+SELECT salary FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.employee_name = 'Bill';
+/* OUTPUT
++---------------------+
+| salary              |
++---------------------+
+| 25786312.2500000000 |
++---------------------+
+*/
