@@ -252,3 +252,48 @@ UPDATE employee SET address_id = 10 WHERE id = 10;
 
 INSERT INTO phone (phone_number, employee_id)
 VALUES ('8757456823', 10), ('5873642356', 10);
+
+-- employee and employee payroll have one to one relationship
+-- thats why have to add employee payroll id to employee table also
+ALTER TABLE employee 
+ADD employee_payroll_id INT,
+ADD FOREIGN KEY (employee_payroll_id) REFERENCES employee_payroll(id);
+
+-- set employee payroll id to employee table
+UPDATE employee
+INNER JOIN employee_payroll ON employee_payroll.employee_id = employee.id
+SET employee.employee_payroll_id = employee_payroll.id;
+
+-- create company table having one to many relationship with employee
+CREATE TABLE company (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    company_name VARCHAR(30) NOT NULL
+);
+
+INSERT INTO company (company_name) VALUES ('TCS'), ('MAHINDRA');
+
+ALTER TABLE employee
+ADD company_id INT,
+ADD FOREIGN KEY (company_id) REFERENCES company(id);
+
+UPDATE employee SET company_id = 1
+WHERE id = 1 OR id = 3 OR id = 6 OR id = 8 OR id = 2;
+
+UPDATE employee SET company_id = 2
+WHERE id = 4 OR id = 5 OR id = 7 OR id = 9 OR id = 10;
+
+-- employee and department having many to many relationship
+-- create employee_department table
+CREATE TABLE employee_department AS 
+SELECT id, id AS employee_id, department_id FROM employee;
+
+ALTER TABLE employee_department
+MODIFY id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ADD FOREIGN KEY (employee_id) REFERENCES employee(id),
+ADD FOREIGN KEY (department_id) REFERENCES department(id);
+
+INSERT INTO employee_department (employee_id, department_id)
+VALUES (1, 2), (6, 2), (3, 1), (8, 1);
+
+ALTER TABLE employee DROP FOREIGN KEY employee_ibfk_1;
+ALTER TABLE employee DROP department_id;
