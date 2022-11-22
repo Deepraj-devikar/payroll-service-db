@@ -166,25 +166,25 @@ SELECT * FROM employee_address;
 -- retrive employee information by join
 SELECT e.id As employee_id, e.employee_name, p.phone_number, 
 e_a.line_1 AS address_line_1, e_a.line_2 AS address_line_2, 
-e_a.city, e_a.state_name, e_a.country, e_a.zip 
+e_a.city, e_a.state_name, e_a.country, e_a.zip, d.department_name
 FROM employee AS e 
 LEFT JOIN phone AS p ON e.id = p.employee_id
 LEFT JOIN employee_address AS e_a ON e.id = e_a.employee_id
 LEFT JOIN  department AS d ON d.id = e.department_id;
 /* OUTPUT
-+-------------+---------------+--------------+----------------+----------------+------+------------+---------+--------+
-| employee_id | employee_name | phone_number | address_line_1 | address_line_2 | city | state_name | country | zip    |
-+-------------+---------------+--------------+----------------+----------------+------+------------+---------+--------+
-|           1 | Pushpak       | 9852541256   | godibar sq     | shop name      | NGP  | MH         | IND     | 440015 |
-|           1 | Pushpak       | 7861542354   | godibar sq     | shop name      | NGP  | MH         | IND     | 440015 |
-|           2 | Jayesh        | 4782561472   | maskasath      | near mandir    | NGP  | MH         | IND     | 441125 |
-|           2 | Jayesh        | 789254175    | maskasath      | near mandir    | NGP  | MH         | IND     | 441125 |
-|           3 | Ram           | 7854123568   | agresan sq     | garage name    | NGP  | MH         | IND     | 442571 |
-|           4 | Rupesh        | 781475473214 | jhasi rani sq  | complex number | NGP  | MH         | IND     | 445782 |
-|           5 | Narang        | 8752689874   | line 1         | line 2         | city | state      | country | 000000 |
-|           6 | Sarang        | 785786589    | line 1         | line 2         | city | state      | country | 000000 |
-|           7 | Bill          | 4785682541   | line 1         | line 2         | city | state      | country | 000000 |
-|           8 | Sita          | 875471243    | mahal          | shop name      | NGP  | MH         | IND     | 445471 |
-|           9 | Gita          | 8965748741   | line 1         | line 2         | city | state      | country | 000000 |
-+-------------+---------------+--------------+----------------+----------------+------+------------+---------+--------+
++-------------+---------------+--------------+----------------+----------------+------+------------+---------+--------+------------------+
+| employee_id | employee_name | phone_number | address_line_1 | address_line_2 | city | state_name | country | zip    | department_name  |
++-------------+---------------+--------------+----------------+----------------+------+------------+---------+--------+------------------+
+|           1 | Pushpak       | 9852541256   | godibar sq     | shop name      | NGP  | MH         | IND     | 440015 | computer science |
+|           1 | Pushpak       | 7861542354   | godibar sq     | shop name      | NGP  | MH         | IND     | 440015 | computer science |
+|           2 | Jayesh        | 4782561472   | maskasath      | near mandir    | NGP  | MH         | IND     | 441125 | electrical       |
+|           2 | Jayesh        | 789254175    | maskasath      | near mandir    | NGP  | MH         | IND     | 441125 | electrical       |
+|           3 | Ram           | 7854123568   | agresan sq     | garage name    | NGP  | MH         | IND     | 442571 | electrical       |
+|           4 | Rupesh        | 781475473214 | jhasi rani sq  | complex number | NGP  | MH         | IND     | 445782 | computer science |
+|           5 | Narang        | 8752689874   | line 1         | line 2         | city | state      | country | 000000 | electrical       |
+|           6 | Sarang        | 785786589    | line 1         | line 2         | city | state      | country | 000000 | computer science |
+|           7 | Bill          | 4785682541   | line 1         | line 2         | city | state      | country | 000000 | computer science |
+|           8 | Sita          | 875471243    | mahal          | shop name      | NGP  | MH         | IND     | 445471 | electrical       |
+|           9 | Gita          | 8965748741   | line 1         | line 2         | city | state      | country | 000000 | computer science |
++-------------+---------------+--------------+----------------+----------------+------+------------+---------+--------+------------------+
 */
