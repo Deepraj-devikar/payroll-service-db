@@ -397,3 +397,123 @@ WHERE e.id = 10;
 |          10 | Terissa       | F      | Sales And Marketing | 100000.0000000000 | 120000.0000000000 | 1000.0000000000 | 2000.0000000000 | 95000.0000000000 | Sukanya Samridhhi Account |  2500.0000000000 | 2022-11-22 |
 +-------------+---------------+--------+---------------------+-------------------+-------------------+-----------------+-----------------+------------------+---------------------------+------------------+------------+
 */
+
+-- check sum of all male employees salary
+SELECT SUM(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'M' GROUP BY employee.gender;
+/* OUTPUT
++------------------------------+
+| SUM(employee_payroll.salary) |
++------------------------------+
+|          34139035.6690000000 |
++------------------------------+
+*/
+
+-- check sum of all female employees salary
+SELECT SUM(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'F' GROUP BY employee.gender;
+/* OUTPUT
++------------------------------+
+| SUM(employee_payroll.salary) |
++------------------------------+
+|           6449767.3300000000 |
++------------------------------+
+*/
+
+-- check average of all male employees salary
+SELECT AVG(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'M' GROUP BY employee.gender;
+/* OUTPUT
++------------------------------+
+| AVG(employee_payroll.salary) |
++------------------------------+
+|       4877005.09557142857143 |
++------------------------------+
+*/
+
+-- check average of all female employees salary
+SELECT AVG(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'F' GROUP BY employee.gender;
+/* OUTPUT
++------------------------------+
+| AVG(employee_payroll.salary) |
++------------------------------+
+|       2149922.44333333333333 |
++------------------------------+
+*/
+
+-- check minimum salary of all male employees
+SELECT MIN(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'M' GROUP BY employee.gender;
+/* OUTPUT
++------------------------------+
+| MIN(employee_payroll.salary) |
++------------------------------+
+|             20000.0000000000 |
++------------------------------+
+*/
+
+-- check minimum salary of all female employees
+SELECT MIN(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'F' GROUP BY employee.gender;
+/* OUTPUT
++------------------------------+
+| MIN(employee_payroll.salary) |
++------------------------------+
+|            100000.0000000000 |
++------------------------------+
+*/
+
+-- check maximum salary of all male employees
+SELECT MAX(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'M' GROUP BY employee.gender;
+/* OUTPUT
++------------------------------+
+| MAX(employee_payroll.salary) |
++------------------------------+
+|          25786312.2500000000 |
++------------------------------+
+*/
+
+-- check maximum salary of all female employees
+SELECT MAX(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'F' GROUP BY employee.gender;
+/* OUTPUT
++------------------------------+
+| MAX(employee_payroll.salary) |
++------------------------------+
+|           5867253.1200000000 |
++------------------------------+
+*/
+
+-- check count of all male employees who gets salary
+SELECT COUNT(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'M' GROUP BY employee.gender;
+/* OUTPUT
++--------------------------------+
+| COUNT(employee_payroll.salary) |
++--------------------------------+
+|                              7 |
++--------------------------------+
+*/
+
+-- check count of all female employees who gets salary
+SELECT COUNT(employee_payroll.salary) FROM employee_payroll
+LEFT JOIN employee ON employee_payroll.employee_id = employee.id
+WHERE employee.gender = 'F' GROUP BY employee.gender;
+/* OUTPUT
++--------------------------------+
+| COUNT(employee_payroll.salary) |
++--------------------------------+
+|                              3 |
++--------------------------------+
+*/
