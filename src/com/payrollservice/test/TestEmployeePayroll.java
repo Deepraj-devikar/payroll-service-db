@@ -1,6 +1,5 @@
 package com.payrollservice.test;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 
 import org.junit.Assert;
@@ -8,18 +7,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.payrollservice.EmployeePayroll;
-import com.payrollservice.PayrollService;
+import com.payrollservice.EmployeePayrollDBService;
 
 public class TestEmployeePayroll {
 	private ArrayList<EmployeePayroll> employeePayrollList;
 	@Before
 	public void setUp() throws Exception {
-		PayrollService payrollService = new PayrollService();
-		Connection connection = null;
-		if(payrollService.isDriverLoaded()) {
-			connection = payrollService.getConnection();
-		}
-		employeePayrollList = payrollService.readEmployeePayrolls(connection);
+		EmployeePayrollDBService employeePayrollDBService = EmployeePayrollDBService.getInstance();
+		employeePayrollList = employeePayrollDBService.readEmployeePayrolls();
 	}
 
 	@Test
