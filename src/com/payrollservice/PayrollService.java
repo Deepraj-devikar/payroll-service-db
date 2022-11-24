@@ -16,8 +16,47 @@ public class PayrollService {
 		if(payrollService.isDriverLoaded()) {
 			payrollService.listDrivers();
 			Connection connection = payrollService.getConnection();	
+			ArrayList<String[]> wheres = new ArrayList<String[]>();
+			String id = payrollService.getEmployeeIdByName(connection, "Terissa");
+			ArrayList<String[]> data = new ArrayList<String[]>();
+			String[] info = {"basic_pay", "3000000.00"};
+			data.add(info);
+			String[] info2 = {"salary", "3500000.00"};
+			data.add(info2);
+			payrollService.updateEmployeePayroll(connection, id, data);
 			ArrayList<EmployeePayroll> employeePayrollList = payrollService.readEmployeePayrolls(connection);
 			System.out.println(employeePayrollList);
+		}
+	}
+	
+	private String getEmployeeIdByName(Connection connection, String employeeName) {
+		String employeePayrollSQL = "SELECT id FROM employee WHERE employee_name = '"+employeeName+"'";
+		try {
+			PreparedStatement preparedStatementForEmployeePayroll = (PreparedStatement) connection.prepareStatement(employeePayrollSQL);
+			boolean isPreparedStatementExecuted = preparedStatementForEmployeePayroll.execute();
+			System.out.println("Prepered ststement "+(isPreparedStatementExecuted ? "" : "not " )+"executed successfully. and employee payroll data retrived by id.");
+			ResultSet resultSetEmployeePayroll = preparedStatementForEmployeePayroll.getResultSet();
+			while(resultSetEmployeePayroll.next()) {
+				return String.valueOf(resultSetEmployeePayroll.getInt("id"));
+			}
+		} catch(Exception exception) {
+			System.out.println("problem in get employee id by name prepared statement. Exception is - "+exception);
+		}
+		return "";
+	}
+
+	private void updateEmployeePayroll(Connection connection, String id, ArrayList<String[]> data) {
+		String updateEmployeePayrollSQL = "UPDATE employee_payroll SET";
+		for(int i = 0; i < data.size(); i++) {
+			String[] info = data.get(i);
+			updateEmployeePayrollSQL += (i != 0 ? "," : "")+" "+info[0]+" = '"+info[1]+"'";
+		}
+		updateEmployeePayrollSQL += " WHERE id = '"+id+"'";
+		try {
+			PreparedStatement preparedStatementForUpdateEmployeePayroll = (PreparedStatement) connection.prepareStatement(updateEmployeePayrollSQL);
+			preparedStatementForUpdateEmployeePayroll.execute();
+		} catch(Exception exception) {
+			System.out.println("problem in update employee payroll prepared statement");
 		}
 	}
 
@@ -56,7 +95,7 @@ public class PayrollService {
 				employeePayrollList.add(tempEmployeePayroll);
 			}
 		} catch (SQLException e) {
-			System.out.println("problem in prepared statement");
+			System.out.println("problem in read employee payrolls prepared statement");
 		}
 		return employeePayrollList;
 	}
