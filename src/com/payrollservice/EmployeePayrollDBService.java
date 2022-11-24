@@ -7,14 +7,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 public class EmployeePayrollDBService {
 	private static EmployeePayrollDBService employeePayrollDBService;
 	private boolean isDriverLoaded = false;
-	private PreparedStatement employeePayrollsDataStatement;
-	private PreparedStatement employeeIdByNameDataStatement;
+	private Hashtable<String, PreparedStatement> preparedStatements;
+	private enum PreparedStatementOptions{ALL_EMPLOYEE_PAYROLL_DATA, EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME, EMPLOYEE_PAYROLL_DEDUCTION};
 	
 	private EmployeePayrollDBService() {
+		preparedStatements = new Hashtable<String, PreparedStatement>();
 	}
 	
 	public static EmployeePayrollDBService getInstance() {
@@ -60,24 +62,28 @@ public class EmployeePayrollDBService {
 		return connection;
 	}
 	
-	private void prepareStatementForEmployeePayrolls() {
-		try {
-			Connection connection = getConnection();
-			String sql = "SELECT e_p.id AS employee_payroll_id, e.id AS employee_id,  e.employee_name, e.gender, "
-					+ "e_p.salary, e_p.basic_pay, e_p.taxable_pay, e_p.income_tax, e_p.net_pay, e.start_date "
-					+ "FROM employee_payroll AS e_p "
-					+ "LEFT JOIN employee AS e ON e_p.employee_id = e.id";
-			employeePayrollsDataStatement = connection.prepareStatement(sql);
-		} catch(Exception exception) {
-			exception.printStackTrace();
+	private void makePreparedStatement(PreparedStatementOptions preparedStatementOptions) {
+		if(preparedStatements.containsKey(preparedStatementOptions.toString())) {
+			return;
 		}
-	}
-	
-	private void prepareStatementForEmployeeIdByName() {
 		try {
 			Connection connection = getConnection();
-			String sql = "SELECT id FROM employee WHERE employee_name = ?";
-			employeeIdByNameDataStatement = connection.prepareStatement(sql);
+			String sql = "";
+			switch(preparedStatementOptions) {
+			case ALL_EMPLOYEE_PAYROLL_DATA:
+				sql = "SELECT e_p.id AS employee_payroll_id, e.id AS employee_id,  e.employee_name, e.gender, "
+						+ "e_p.salary, e_p.basic_pay, e_p.taxable_pay, e_p.income_tax, e_p.net_pay, e.start_date "
+						+ "FROM employee_payroll AS e_p "
+						+ "LEFT JOIN employee AS e ON e_p.employee_id = e.id";
+				break;
+			case EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME:
+				sql = "SELECT id FROM employee WHERE employee_name = ?";
+				break;
+			case EMPLOYEE_PAYROLL_DEDUCTION:
+				sql = "SELECT * FROM deduction WHERE employee_payroll_id = ?";
+				break;
+			}
+			preparedStatements.put(preparedStatementOptions.toString(), connection.prepareStatement(sql));
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}
@@ -85,13 +91,16 @@ public class EmployeePayrollDBService {
 	
 	public ArrayList<EmployeePayroll> readEmployeePayrolls() {
 		ArrayList<EmployeePayroll> employeePayrollList = new ArrayList<EmployeePayroll>();
-		if(employeePayrollsDataStatement == null) {
-			prepareStatementForEmployeePayrolls();
+		if(!preparedStatements.containsKey("ALL_EMPLOYEE_PAYROLL_DATA")) {
+			makePreparedStatement(PreparedStatementOptions.ALL_EMPLOYEE_PAYROLL_DATA);
+		}
+		if(!preparedStatements.containsKey("EMPLOYEE_PAYROLL_DEDUCTION")) {
+			makePreparedStatement(PreparedStatementOptions.EMPLOYEE_PAYROLL_DEDUCTION);
 		}
 		try {
-			boolean isPreparedStatementExecuted = employeePayrollsDataStatement.execute();
+			boolean isPreparedStatementExecuted = preparedStatements.get("ALL_EMPLOYEE_PAYROLL_DATA").execute();
 			System.out.println("Prepered ststement "+(isPreparedStatementExecuted ? "" : "not " )+"executed successfully. and employee payroll data retrived.");
-			ResultSet resultSetEmployeePayroll = employeePayrollsDataStatement.getResultSet();
+			ResultSet resultSetEmployeePayroll = preparedStatements.get("ALL_EMPLOYEE_PAYROLL_DATA").getResultSet();
 			while(resultSetEmployeePayroll.next()) {
 				EmployeePayroll tempEmployeePayroll = new EmployeePayroll(resultSetEmployeePayroll.getInt("employee_payroll_id"));
 				tempEmployeePayroll.setEmployeeId(resultSetEmployeePayroll.getInt("employee_id"));
@@ -103,6 +112,14 @@ public class EmployeePayrollDBService {
 				tempEmployeePayroll.setTaxablePay(resultSetEmployeePayroll.getFloat("taxable_pay"));
 				tempEmployeePayroll.setIncomeTax(resultSetEmployeePayroll.getFloat("income_tax"));
 				tempEmployeePayroll.setNetPay(resultSetEmployeePayroll.getFloat("net_pay"));
+				preparedStatements.get("EMPLOYEE_PAYROLL_DEDUCTION").setInt(1, tempEmployeePayroll.getId());
+				ResultSet resultSetDeduction = preparedStatements.get("EMPLOYEE_PAYROLL_DEDUCTION").executeQuery();
+				while(resultSetDeduction.next()) {
+					tempEmployeePayroll.addDeduction(
+							resultSetDeduction.getInt("id"), 
+							resultSetDeduction.getString("deduction_name"), 
+							resultSetDeduction.getFloat("deduction_amount"));
+				}
 				employeePayrollList.add(tempEmployeePayroll);
 			}
 		} catch(Exception exception) {
@@ -112,14 +129,15 @@ public class EmployeePayrollDBService {
 	}
 	
 	public String getEmployeeIdByName(String employeeName) {
-		if(employeeIdByNameDataStatement == null) {
-			prepareStatementForEmployeeIdByName();	
+		if(!preparedStatements.containsKey("EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME")) {
+			makePreparedStatement(PreparedStatementOptions.EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME);
 		}
 		try {
-			employeeIdByNameDataStatement.setString(1, employeeName);
-			ResultSet resultSetEmployeePayroll = employeeIdByNameDataStatement.executeQuery();
-			while(resultSetEmployeePayroll.next()) {
-				return String.valueOf(resultSetEmployeePayroll.getInt("id"));
+			preparedStatements.get("EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME").setString(1, employeeName);
+			System.out.println(preparedStatements.get("EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME").toString());
+			ResultSet resultSetEmployee = preparedStatements.get("EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME").executeQuery();
+			while(resultSetEmployee.next()) {
+				return String.valueOf(resultSetEmployee.getInt("id"));
 			}
 		} catch(Exception exception) {
 			System.out.println("problem in get employee id by name prepared statement. Exception is - "+exception);
