@@ -29,7 +29,7 @@ public class PayrollService {
 		}
 	}
 	
-	private String getEmployeeIdByName(Connection connection, String employeeName) {
+	public String getEmployeeIdByName(Connection connection, String employeeName) {
 		String employeePayrollSQL = "SELECT id FROM employee WHERE employee_name = '"+employeeName+"'";
 		try {
 			PreparedStatement preparedStatementForEmployeePayroll = (PreparedStatement) connection.prepareStatement(employeePayrollSQL);
@@ -45,7 +45,7 @@ public class PayrollService {
 		return "";
 	}
 
-	private void updateEmployeePayroll(Connection connection, String id, ArrayList<String[]> data) {
+	public void updateEmployeePayroll(Connection connection, String id, ArrayList<String[]> data) {
 		String updateEmployeePayrollSQL = "UPDATE employee_payroll SET";
 		for(int i = 0; i < data.size(); i++) {
 			String[] info = data.get(i);
@@ -60,7 +60,7 @@ public class PayrollService {
 		}
 	}
 
-	private ArrayList<EmployeePayroll> readEmployeePayrolls(Connection connection) {
+	public ArrayList<EmployeePayroll> readEmployeePayrolls(Connection connection) {
 		String employeePayrollSQL = "SELECT e_p.id AS employee_payroll_id, e.id AS employee_id,  e.employee_name, e.gender, "
 				+ "e_p.salary, e_p.basic_pay, e_p.taxable_pay, e_p.income_tax, e_p.net_pay, e.start_date "
 				+ "FROM employee_payroll AS e_p "
@@ -100,7 +100,7 @@ public class PayrollService {
 		return employeePayrollList;
 	}
 
-	private void listDrivers() {
+	public void listDrivers() {
 		Enumeration<Driver> driverList = DriverManager.getDrivers();
 		while(driverList.hasMoreElements()) {
 			Driver driverClass = (Driver) driverList.nextElement();
@@ -108,7 +108,7 @@ public class PayrollService {
 		}
 	}
 
-	private boolean isDriverLoaded() {
+	public boolean isDriverLoaded() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println("Driver loaded");
@@ -119,7 +119,7 @@ public class PayrollService {
 		}
 	}
 
-	private Connection getConnection() {
+	public Connection getConnection() {
 		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service";
 		String userName = "root";
 		String password = "root";
