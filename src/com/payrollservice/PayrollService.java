@@ -30,7 +30,7 @@ public class PayrollService {
 	}
 	
 	public String getEmployeeIdByName(Connection connection, String employeeName) {
-		String employeePayrollSQL = "SELECT id FROM employee WHERE employee_name = '"+employeeName+"'";
+		String employeePayrollSQL = String.format("SELECT id FROM employee WHERE employee_name = '%s'", employeeName);
 		try {
 			PreparedStatement preparedStatementForEmployeePayroll = (PreparedStatement) connection.prepareStatement(employeePayrollSQL);
 			boolean isPreparedStatementExecuted = preparedStatementForEmployeePayroll.execute();
@@ -49,12 +49,13 @@ public class PayrollService {
 		String updateEmployeePayrollSQL = "UPDATE employee_payroll SET";
 		for(int i = 0; i < data.size(); i++) {
 			String[] info = data.get(i);
-			updateEmployeePayrollSQL += (i != 0 ? "," : "")+" "+info[0]+" = '"+info[1]+"'";
+			updateEmployeePayrollSQL += String.format("%s %s = '%s'", (i != 0 ? "," : ""), info[0], info[1]);
 		}
-		updateEmployeePayrollSQL += " WHERE id = '"+id+"'";
+		updateEmployeePayrollSQL += String.format(" WHERE id = '%s'", id);
 		try {
 			PreparedStatement preparedStatementForUpdateEmployeePayroll = (PreparedStatement) connection.prepareStatement(updateEmployeePayrollSQL);
 			preparedStatementForUpdateEmployeePayroll.execute();
+			System.out.println("employee payroll data updated successfully!!!");
 		} catch(Exception exception) {
 			System.out.println("problem in update employee payroll prepared statement");
 		}
