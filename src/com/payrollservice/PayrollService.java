@@ -16,5 +16,6 @@ public class PayrollService {
 		employeePayrollDBService.updateEmployeePayroll(terissaPayrollId, dataToUpdate);
 		ArrayList<EmployeePayroll> employeePayrollList = employeePayrollDBService.readEmployeePayrolls();
 		System.out.println(employeePayrollList);
+		employeePayrollDBService.showGenderAggregates();
 	}
 }

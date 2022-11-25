@@ -5,6 +5,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -13,7 +14,11 @@ public class EmployeePayrollDBService {
 	private static EmployeePayrollDBService employeePayrollDBService;
 	private boolean isDriverLoaded = false;
 	private Hashtable<String, PreparedStatement> preparedStatements;
-	private enum PreparedStatementOptions{ALL_EMPLOYEE_PAYROLL_DATA, EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME, EMPLOYEE_PAYROLL_DEDUCTION};
+	private enum PreparedStatementOptions{
+		ALL_EMPLOYEE_PAYROLL_DATA, 
+		EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME, 
+		EMPLOYEE_PAYROLL_DEDUCTION
+	};
 	
 	private EmployeePayrollDBService() {
 		preparedStatements = new Hashtable<String, PreparedStatement>();
@@ -134,7 +139,6 @@ public class EmployeePayrollDBService {
 		}
 		try {
 			preparedStatements.get("EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME").setString(1, employeeName);
-			System.out.println(preparedStatements.get("EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME").toString());
 			ResultSet resultSetEmployee = preparedStatements.get("EMPLOYEE_PAYROLL_ID_BY_EMPLOYEE_NAME").executeQuery();
 			while(resultSetEmployee.next()) {
 				return String.valueOf(resultSetEmployee.getInt("id"));
@@ -143,6 +147,35 @@ public class EmployeePayrollDBService {
 			System.out.println("problem in get employee id by name prepared statement. Exception is - "+exception);
 		}
 		return "";
+	}
+	
+	public void showGenderAggregates() {
+		Connection connection  = getConnection();
+		try {
+			Statement statement = connection.createStatement();
+			String sql = "SELECT "
+					+ "CASE "
+					+ "    WHEN employee.gender = 'M' THEN 'Male'"
+					+ "    WHEN employee.gender = 'F' THEN 'Female'"
+					+ "END AS employee_gender, "
+					+ "SUM(employee_payroll.salary), AVG(employee_payroll.salary), MIN(employee_payroll.salary), "
+					+ "MAX(employee_payroll.salary), COUNT(employee_payroll.salary) "
+					+ "FROM employee_payroll "
+					+ "LEFT JOIN employee ON employee_payroll.employee_id = employee.id "
+					+ "GROUP BY employee.gender";
+			statement.execute(sql);
+			ResultSet resultSet = statement.getResultSet();
+			while(resultSet.next()) {
+				System.out.println("GENDER => "+resultSet.getString("employee_gender"));
+				System.out.println("SUM => "+resultSet.getString("SUM(employee_payroll.salary)"));
+				System.out.println("AVG => "+resultSet.getString("AVG(employee_payroll.salary)"));
+				System.out.println("MIN => "+resultSet.getString("MIN(employee_payroll.salary)"));
+				System.out.println("MAX => "+resultSet.getString("MAX(employee_payroll.salary)"));
+				System.out.println("COUNT => "+resultSet.getString("COUNT(employee_payroll.salary)"));
+			}
+		} catch(Exception exception) {
+			System.out.println("problem in show gender aggregates . Exception is - "+exception);
+		}
 	}
 	
 	public void updateEmployeePayroll(String id, ArrayList<String[]> data) {
