@@ -108,15 +108,16 @@ public class EmployeePayrollDBService {
 			ResultSet resultSetEmployeePayroll = preparedStatements.get("ALL_EMPLOYEE_PAYROLL_DATA").getResultSet();
 			while(resultSetEmployeePayroll.next()) {
 				EmployeePayroll tempEmployeePayroll = new EmployeePayroll(resultSetEmployeePayroll.getInt("employee_payroll_id"));
-				tempEmployeePayroll.setEmployeeId(resultSetEmployeePayroll.getInt("employee_id"));
-				tempEmployeePayroll.setEmployeeName(resultSetEmployeePayroll.getNString("employee_name"));
-				tempEmployeePayroll.setEmployeeGender(resultSetEmployeePayroll.getString("gender").charAt(0));
-				tempEmployeePayroll.setStartDate(resultSetEmployeePayroll.getString("start_date"));
 				tempEmployeePayroll.setSalary(resultSetEmployeePayroll.getFloat("salary"));
 				tempEmployeePayroll.setBasicPay(resultSetEmployeePayroll.getFloat("basic_pay"));
 				tempEmployeePayroll.setTaxablePay(resultSetEmployeePayroll.getFloat("taxable_pay"));
 				tempEmployeePayroll.setIncomeTax(resultSetEmployeePayroll.getFloat("income_tax"));
 				tempEmployeePayroll.setNetPay(resultSetEmployeePayroll.getFloat("net_pay"));
+				Employee tempEmployee = new Employee(resultSetEmployeePayroll.getInt("employee_id"));
+				tempEmployee.setEmployeeName(resultSetEmployeePayroll.getNString("employee_name"));
+				tempEmployee.setEmployeeGender(resultSetEmployeePayroll.getString("gender").charAt(0));
+				tempEmployee.setStartDate(resultSetEmployeePayroll.getString("start_date"));
+				tempEmployee.setEmployeePayroll(tempEmployeePayroll);
 				preparedStatements.get("EMPLOYEE_PAYROLL_DEDUCTION").setInt(1, tempEmployeePayroll.getId());
 				ResultSet resultSetDeduction = preparedStatements.get("EMPLOYEE_PAYROLL_DEDUCTION").executeQuery();
 				while(resultSetDeduction.next()) {

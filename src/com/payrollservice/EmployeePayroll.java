@@ -34,10 +34,7 @@ public class EmployeePayroll {
 		}
 	}
 	private int id;
-	private int employeeId;
-	private String employeeName;
-	private char employeeGender;
-	private String startDate;
+	private Employee employee;
 	private float salary;
 	private float basicPay;
 	private float taxablePay;
@@ -58,36 +55,15 @@ public class EmployeePayroll {
 		this.id = id;
 	}
 
-	public int getEmployeeId() {
-		return employeeId;
+	public Employee getEmployee() {
+		return employee;
 	}
 
-	public void setEmployeeId(int employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	public String getEmployeeName() {
-		return employeeName;
-	}
-
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
-	}
-
-	public char getEmployeeGender() {
-		return employeeGender;
-	}
-
-	public void setEmployeeGender(char employeeGender) {
-		this.employeeGender = employeeGender;
-	}
-
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+		if(this.employee.getEmployeePayroll() == null) {
+			this.employee.setEmployeePayroll(this);
+		}
 	}
 
 	public float getSalary() {
@@ -142,9 +118,7 @@ public class EmployeePayroll {
 	}	
 	@Override
 	public String toString() {
-		return "\n Employee name => "+employeeName+
-				"\n Gender => "+(employeeGender == 'M' ? "Male" : "Female")+
-				"\n Start Date => "+startDate+
+		return employee.toString()+
 				"\n Salary => "+salary+
 				"\n Basic Pay => "+basicPay+
 				"\n Taxable Pay => "+taxablePay+
